@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import styles from "./Cityselector.css";
 
 function CitySelector(){
 
@@ -58,7 +59,7 @@ useEffect(() => {
         try {
             const res = await fetch(`https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${selectedState}/cities`)
             const res_json= await res.json();
-            setCities(Array.isArray(res_json)?res_json:[]);
+            setCities(res_json);
             setSelectedCity("");
             
         } catch (error) {
@@ -77,69 +78,64 @@ useEffect(() => {
 
 
     return(
-        <div>
-            <h1>Select Location</h1>
-            <select style={{
-                marginRight:"10px",
-                height:"40px"
-            }} value={selectedCountry} onChange={(e)=>setSelectedCountry(e.target.value)}>
-                <option>Select Country</option>
-                {
-                    countries.map((country)=>(
-                        <option key={country} value={country}>{country}</option>
-                    )
-                )}
-            </select>
-
-            <select style={{
-                marginRight:"10px",
-                height:"40px"
-            }}
-        value={selectedState}
-        onChange={(e) => setSelectedState(e.target.value)}
-        disabled={!selectedCountry}
-      >
-        <option value="">Select State</option>
-        {states.map((state) => (
-          <option key={state} value={state}>
-            {state}
+        <div className={styles["city-selector"]}>
+      <h1>Select Location</h1>
+      <div className={styles.dropdowns}>
+        <select
+          value={selectedCountry}
+          onChange={(e) => setSelectedCountry(e.target.value)}
+          className={styles.dropdown}
+        >
+          <option value="" disabled>
+            Select Country
           </option>
-        ))}
-      </select>
-
-
-            <select style={{
-                marginRight:"10px",
-                height:"40px"
-            }} value={selectedCity}
-                    onChange={(e)=>setSelectedCity(e.target.value)}
-                    disabled={!selectedState}>
-                <option>Select City</option>
-                {
-                    cities.map((city)=>(
-                        <option value={city} key={city}>
-                            {city}
-                            </option>
-                    ))
-                }
-            </select>
-
-            {selectedCity && (
-                <p style={{
-                    fontWeight:"bold"
-                }}> You selected <span style={{
-                    
-                    fontSize:"1.5rem"
-                }}>{selectedCity}</span>,<span style={{
-                    opacity:"60%"
-                }}>{selectedState} , {selectedCountry}</span></p>
-            )
-
-            }
-
-
-
-        </div>
+          {countries.map((country) => (
+            <option key={country} value={country}>
+              {country}
+            </option>
+          ))}
+        </select>
+        <select
+          value={selectedState}
+          onChange={(e) => setSelectedState(e.target.value)}
+          disabled={!selectedCountry}
+          className={styles.dropdown}
+        >
+          <option value="" disabled>
+            Select State
+          </option>
+          {states.map((state) => (
+            <option key={state} value={state}>
+              {state}
+            </option>
+          ))}
+        </select>
+        <select
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          disabled={!selectedState}
+          className={styles.dropdown}
+        >
+          <option value="" disabled>
+            Select City
+          </option>
+          {cities.map((city) => (
+            <option key={city} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
+      </div>
+      {selectedCity && (
+        <h2 className={styles.result}>
+          You selected <span className={styles.highlight}>{selectedCity}</span>,
+          <span className={styles.fade}>
+            {" "}
+            {selectedState}, {selectedCountry}
+          </span>
+        </h2>
+      )}
+    </div>
     )
 
 }
